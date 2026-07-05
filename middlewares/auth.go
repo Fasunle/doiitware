@@ -15,14 +15,27 @@ var jwtSecret []byte
 
 // AuthMiddleware validates Bearer tokens, loads the authenticated user into Gin context,
 // and aborts the request with a structured 401 response when validation fails.
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(source string, public []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		if source == "" {
+			source = "service"
+		}
+
+		// check if the requested endpoint is a public route
+		for _, route := range public {
+			if strings.HasPrefix(c.Request.URL.Path, route) {
+				c.Next()
+				return
+			}
+		}
+
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error":   "missing_authorization",
 				"message": "Authorization header is required",
-				"source":  "user-service",
+				"source":  source,
 			})
 			return
 		}
@@ -33,7 +46,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error":   "invalid_token_format",
 				"message": "Invalid authorization header format. Use: Bearer <token>",
-				"source":  "user-service",
+				"source":  source,
 			})
 			return
 		}
@@ -54,7 +67,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error":   "invalid_token",
 				"message": "Invalid or expired token",
-				"source":  "user-service",
+				"source":  source,
 			})
 			return
 		}

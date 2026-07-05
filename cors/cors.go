@@ -18,7 +18,7 @@
 //	    c.JSON(http.StatusOK, gin.H{"token": token})
 //	})
 //
-//	router.GET("/me", authMiddleware(), cors.ProtectedHandler)
+//	router.GET("/me", authMiddleware("service-name", []string{"/api/v1/auth"}), cors.ProtectedHandler)
 //
 // The package expects the calling service to configure the JWT secret and issuer settings
 // through the shared config package before generating tokens.
