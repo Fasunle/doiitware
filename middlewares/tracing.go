@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TracingMiddleware(enabled bool, tracer func(context.Context) (error)) gin.HandlerFunc {
+func TracingMiddleware(enabled bool, tracer func(context.Context) error) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Generate correlation ID
 		correlationID := c.GetHeader("X-Correlation-ID")
@@ -24,9 +24,9 @@ func TracingMiddleware(enabled bool, tracer func(context.Context) (error)) gin.H
 		if enabled {
 			// Start span
 			ctx := context.Background()
-				if err := tracer(ctx); err != nil {
-					log.Panicf("Failed to set up tracer: %v", err)
-				}
+			if err := tracer(ctx); err != nil {
+				log.Panicf("Failed to set up tracer: %v", err)
+			}
 			c.Request = c.Request.WithContext(ctx)
 		}
 

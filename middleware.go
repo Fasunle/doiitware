@@ -65,7 +65,7 @@ func SanitizeInputMiddleware() gin.HandlerFunc {
 }
 
 // TracingMiddleware returns the shared tracing middleware, which can be enabled or disabled and accepts a custom tracer function.
-func TracingMiddleware(enabled bool, tracer func (context.Context) error) gin.HandlerFunc {
+func TracingMiddleware(enabled bool, tracer func(context.Context) error) gin.HandlerFunc {
 	return middleware.TracingMiddleware(enabled, tracer)
 }
 
