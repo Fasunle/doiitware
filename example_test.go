@@ -13,6 +13,7 @@ func Example() {
 	router.Use(CustomRecoveryMiddleware())
 	router.Use(RateLimitMiddleware(limiter, nil))
 	router.Use(SecurityHeadersMiddleware("https://api.example.com"))
+	router.Use(TracingMiddleware(true, nil))
 
 	_ = router
 }

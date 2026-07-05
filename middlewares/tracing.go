@@ -1,38 +1,35 @@
 package middlewares
 
 import (
+	"context"
 	"log"
-	"time"
 
 	"github.com/fasunle/doiitware/helpers"
 	"github.com/gin-gonic/gin"
 )
 
-// RequestLoggerMiddleware attaches a request ID, then logs the request method, path,
-// status, latency, client IP, and user agent after the handler completes.
-func RequestLoggerMiddleware() gin.HandlerFunc {
+func TracingMiddleware(enabled bool, tracer func(context.Context) (error)) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Generate request ID for tracing
-		requestID := helpers.GenerateRequestID()
-		c.Set("request_id", requestID)
-		c.Header("X-Request-ID", requestID)
+		// Generate correlation ID
+		correlationID := c.GetHeader("X-Correlation-ID")
+		if correlationID == "" {
+			correlationID = helpers.GenerateCorrelationID()
+		}
 
-		start := time.Now()
+		c.Set("correlation_id", correlationID)
+		c.Header("X-Correlation-ID", correlationID)
+		c.Request.Header.Set("X-Correlation-ID", correlationID)
+
+		// Add span context if tracing enabled
+		if enabled {
+			// Start span
+			ctx := context.Background()
+				if err := tracer(ctx); err != nil {
+					log.Panicf("Failed to set up tracer: %v", err)
+				}
+			c.Request = c.Request.WithContext(ctx)
+		}
 
 		c.Next()
-
-		// Log after request completes
-		latency := time.Since(start)
-		statusCode := c.Writer.Status()
-
-		log.Printf("[%s] %s %s | Status: %d | Latency: %v | IP: %s | User-Agent: %s",
-			requestID,
-			c.Request.Method,
-			c.Request.URL.Path,
-			statusCode,
-			latency,
-			c.ClientIP(),
-			c.Request.UserAgent(),
-		)
 	}
 }

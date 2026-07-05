@@ -1,6 +1,7 @@
 package doiitware
 
 import (
+	"context"
 	"strings"
 
 	"github.com/fasunle/doiitware/helpers"
@@ -61,6 +62,11 @@ func RequestSizeMiddleware() gin.HandlerFunc {
 // SanitizeInputMiddleware returns the shared input sanitization middleware.
 func SanitizeInputMiddleware() gin.HandlerFunc {
 	return middleware.SanitizeInputMiddleware()
+}
+
+// TracingMiddleware returns the shared tracing middleware, which can be enabled or disabled and accepts a custom tracer function.
+func TracingMiddleware(enabled bool, tracer func (context.Context) error) gin.HandlerFunc {
+	return middleware.TracingMiddleware(enabled, tracer)
 }
 
 // ParseCIDRs splits a comma-separated CIDR list into a normalized slice.
