@@ -13,11 +13,13 @@ import (
 func SanitizeInputMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Sanitize query parameters
-		for key, values := range c.Request.URL.Query() {
+		query := c.Request.URL.Query()
+		for key, values := range query {
 			if len(values) > 0 {
-				c.Request.URL.Query().Set(key, sanitizeString(values[0]))
+				query.Set(key, sanitizeString(values[0]))
 			}
 		}
+		c.Request.URL.RawQuery = query.Encode()
 
 		// Sanitize path parameters
 		for _, param := range c.Params {
