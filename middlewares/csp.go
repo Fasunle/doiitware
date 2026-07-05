@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"fmt"
@@ -8,7 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SecurityHeadersMiddleware adds security headers to all responses
+// SecurityHeadersMiddleware adds the shared browser security headers to every response.
+//
+// The route value is used in the Content-Security-Policy connect-src directive.
 func SecurityHeadersMiddleware(route string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// HSTS - Force HTTPS (preload recommended)

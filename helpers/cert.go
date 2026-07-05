@@ -11,8 +11,9 @@ import (
 	"time"
 )
 
-// GenerateSelfSignedCert generates a self-signed certificate for development
-// In production, use proper certificates from Let's Encrypt or CA
+// GenerateSelfSignedCert generates a self-signed TLS certificate for development and test use.
+//
+// In production, use certificates issued by a trusted certificate authority.
 func GenerateSelfSignedCert(host string) (tls.Certificate, error) {
 	priv, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {

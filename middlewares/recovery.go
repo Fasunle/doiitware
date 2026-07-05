@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"log"
@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CustomRecoveryMiddleware provides better panic recovery with logging
+// CustomRecoveryMiddleware recovers from panics, logs request context, and returns a safe error.
 func CustomRecoveryMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {

@@ -6,11 +6,7 @@ import (
 	"golang.org/x/time/rate"
 )
 
-// ============================================
-// RATE LIMITER IMPLEMENTATION
-// ============================================
-
-// IPRateLimiter stores rate limiters per client IP
+// IPRateLimiter tracks token-bucket rate limiters by client IP address.
 type IPRateLimiter struct {
 	ips map[string]*rate.Limiter
 	mu  *sync.RWMutex
@@ -18,7 +14,7 @@ type IPRateLimiter struct {
 	b   int
 }
 
-// NewIPRateLimiter creates a new rate limiter
+// NewIPRateLimiter returns an IPRateLimiter configured with the provided limit and burst.
 func NewIPRateLimiter(r rate.Limit, b int) *IPRateLimiter {
 	return &IPRateLimiter{
 		ips: make(map[string]*rate.Limiter),
@@ -28,7 +24,7 @@ func NewIPRateLimiter(r rate.Limit, b int) *IPRateLimiter {
 	}
 }
 
-// GetLimiter returns the rate limiter for a specific IP
+// GetLimiter returns the limiter associated with the given IP, creating one on demand.
 func (i *IPRateLimiter) GetLimiter(ip string) *rate.Limiter {
 	i.mu.Lock()
 	defer i.mu.Unlock()

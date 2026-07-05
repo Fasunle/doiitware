@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"net"
@@ -11,7 +11,7 @@ import (
 	"github.com/fasunle/doiitware/helpers"
 )
 
-// RateLimitMiddleware is the Gin middleware for rate limiting
+// RateLimitMiddleware enforces per-client request limits and bypasses whitelisted CIDRs.
 func RateLimitMiddleware(rateLimiter *helpers.IPRateLimiter, whitelistCIDRs []string) gin.HandlerFunc {
 	allowedCIDRs := normalizeCIDRs(whitelistCIDRs)
 
@@ -52,7 +52,7 @@ func normalizeCIDRs(cidrs []string) []string {
 	return normalized
 }
 
-// ipInCIDR checks if an IP is in a CIDR range
+// ipInCIDR reports whether the provided IP belongs to the given CIDR range.
 func ipInCIDR(ipStr, cidr string) bool {
 	_, ipNet, err := net.ParseCIDR(cidr)
 	if err != nil {

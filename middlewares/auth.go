@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"fmt"
@@ -13,7 +13,8 @@ import (
 
 var jwtSecret []byte
 
-// AuthMiddleware validates JWT tokens
+// AuthMiddleware validates Bearer tokens, loads the authenticated user into Gin context,
+// and aborts the request with a structured 401 response when validation fails.
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")

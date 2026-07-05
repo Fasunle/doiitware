@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"net/http"
@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SanitizeInputMiddleware sanitizes request inputs to prevent XSS and injection
+// SanitizeInputMiddleware sanitizes query parameters and path parameters before handlers run.
 func SanitizeInputMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Sanitize query parameters
@@ -30,7 +30,7 @@ func SanitizeInputMiddleware() gin.HandlerFunc {
 	}
 }
 
-// sanitizeString removes potentially dangerous characters
+// sanitizeString removes characters commonly used in trivial HTML and injection payloads.
 func sanitizeString(s string) string {
 	// Basic sanitization - in production, use a proper library
 	// Remove script tags, HTML tags, and common injection patterns
@@ -53,7 +53,7 @@ func sanitizeString(s string) string {
 	return s
 }
 
-// RequestSizeMiddleware limits request body size
+// RequestSizeMiddleware caps the request body size at the shared platform limit.
 func RequestSizeMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, config.MaxRequestSize)

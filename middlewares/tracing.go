@@ -1,19 +1,19 @@
-package middleware
+package middlewares
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"log"
 	"time"
 
+	"github.com/fasunle/doiitware/helpers"
 	"github.com/gin-gonic/gin"
 )
 
-// RequestLoggerMiddleware logs all requests with performance metrics
+// RequestLoggerMiddleware attaches a request ID, then logs the request method, path,
+// status, latency, client IP, and user agent after the handler completes.
 func RequestLoggerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Generate request ID for tracing
-		requestID := generateRequestID()
+		requestID := helpers.GenerateRequestID()
 		c.Set("request_id", requestID)
 		c.Header("X-Request-ID", requestID)
 
@@ -35,11 +35,4 @@ func RequestLoggerMiddleware() gin.HandlerFunc {
 			c.Request.UserAgent(),
 		)
 	}
-}
-
-// generateRequestID creates a unique request ID
-func generateRequestID() string {
-	b := make([]byte, 16)
-	rand.Read(b)
-	return base64.URLEncoding.EncodeToString(b)
 }
