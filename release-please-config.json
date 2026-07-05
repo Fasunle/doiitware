@@ -1,0 +1,8 @@
+{
+  "packages": {
+    "doiitware": {
+      "release-type": "go",
+      "package-name": "doiitware"
+    }
+  }
+}
