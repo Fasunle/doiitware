@@ -12,22 +12,22 @@
 //
 // Example:
 //
-//   package main
+//	package main
 //
-//   import (
-//       doiitware "github.com/fasunle/doiitware"
-//       "github.com/gin-gonic/gin"
-//   )
+//	import (
+//	    doiitware "github.com/fasunle/doiitware"
+//	    "github.com/gin-gonic/gin"
+//	)
 //
-//   func main() {
-//       router := gin.New()
-//       limiter := doiitware.NewIPRateLimiter(100, 200)
+//	func main() {
+//	    router := gin.New()
+//	    limiter := doiitware.NewIPRateLimiter(100, 200)
 //
-//       router.Use(doiitware.RequestLoggerMiddleware())
-//       router.Use(doiitware.CustomRecoveryMiddleware())
-//       router.Use(doiitware.RateLimitMiddleware(limiter, nil))
-//       router.Use(doiitware.SecurityHeadersMiddleware("https://api.example.com"))
+//	    router.Use(doiitware.RequestLoggerMiddleware())
+//	    router.Use(doiitware.CustomRecoveryMiddleware())
+//	    router.Use(doiitware.RateLimitMiddleware(limiter, nil))
+//	    router.Use(doiitware.SecurityHeadersMiddleware("https://api.example.com"))
 //
-//       _ = router.Run()
-//   }
+//	    _ = router.Run()
+//	}
 package doiitware
