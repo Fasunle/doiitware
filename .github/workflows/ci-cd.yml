@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: doiitware
+        working-directory: .
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,9 +27,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: doiitware/go.mod
+          go-version-file: ./go.mod
           cache: true
-          cache-dependency-path: doiitware/go.sum
+          cache-dependency-path: ./go.sum
 
       - name: Verify formatting
         run: |
