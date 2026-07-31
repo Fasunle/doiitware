@@ -55,7 +55,7 @@ func AuthMiddleware(source string, public []string) gin.HandlerFunc {
 
 		// Parse and validate token
 		claims := &cors.Claims{}
-		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (any, error) {
 			// Validate signing method
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -74,6 +74,8 @@ func AuthMiddleware(source string, public []string) gin.HandlerFunc {
 
 		// Set user info in context
 		c.Set("user_id", claims.UserID)
+		c.Set("device_id", claims.DeviceID)
+		c.Set("session_id", claims.SessionID)
 		c.Set("email", claims.Email)
 		c.Set("roles", claims.Roles)
 

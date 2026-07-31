@@ -41,10 +41,11 @@ import (
 // The registered claims are populated with the issuer, audience, subject, issue time,
 // validity window, and token ID used by Doiit services.
 type Claims struct {
-	UserID   string   `json:"user_id"`
-	Email    string   `json:"email"`
-	Roles    []string `json:"roles"`
-	ClientID string   `json:"client_id,omitempty"`
+	UserID    string   `json:"user_id"`
+	Email     string   `json:"email"`
+	Roles     []string `json:"roles"`
+	DeviceID  string   `json:"device_id"`
+	SessionID string   `json:"session_id"`
 	jwt.RegisteredClaims
 }
 
