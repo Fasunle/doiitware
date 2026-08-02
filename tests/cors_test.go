@@ -50,8 +50,8 @@ func TestCORS(t *testing.T) {
 			requestMethod:     "OPTIONS",
 			expectedStatus:    http.StatusNoContent,
 			expectedHeaders: map[string]string{
-				"Access-Control-Allow-Origin":      "https://example.com",
-				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE, OPTIONS",
+				"Access-Control-Allow-Origin":  "https://example.com",
+				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
 			},
 		},
 		{
