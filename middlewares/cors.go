@@ -49,6 +49,11 @@ func CORS(allowedOriginsStr string, methods string, headers *string, exposeHeade
 			return
 		}
 
+		if !IsMethodAllowed(c.Request.Method, methods) {
+			c.AbortWithStatus(http.StatusMethodNotAllowed)
+			return
+		}
+
 		// Check if the request origin is allowed
 		if !IsOriginAllowed(reqOrigin, allowedOrigins) {
 			c.AbortWithStatus(http.StatusForbidden)
@@ -97,6 +102,13 @@ func IsOriginAllowed(origin string, allowedOrigins []string) bool {
 		}
 	}
 	return false
+}
+
+// IsMethodAllowed checks if a method is in the allowed methods string
+func IsMethodAllowed(method string, allowedMethods string) bool {
+	method = strings.ToUpper(method)
+	allowedMethods = strings.ToUpper(allowedMethods)
+	return strings.Contains(allowedMethods, method)
 }
 
 // MatchOrigin handles wildcard matching with proper semantics
