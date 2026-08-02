@@ -35,7 +35,7 @@ func TestCORS(t *testing.T) {
 			expectedStatus:    http.StatusOK,
 			expectedHeaders: map[string]string{
 				"Access-Control-Allow-Origin":      "https://example.com",
-				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE",
+				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE, OPTIONS",
 				"Access-Control-Allow-Credentials": "true",
 				"Access-Control-Expose-Headers":    "Content-Length, X-Request-ID",
 			},
@@ -51,8 +51,7 @@ func TestCORS(t *testing.T) {
 			expectedStatus:    http.StatusNoContent,
 			expectedHeaders: map[string]string{
 				"Access-Control-Allow-Origin":      "https://example.com",
-				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE",
-				"Access-Control-Allow-Credentials": "true",
+				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE, OPTIONS",
 			},
 		},
 		{
@@ -77,7 +76,7 @@ func TestCORS(t *testing.T) {
 			expectedStatus:    http.StatusOK,
 			expectedHeaders: map[string]string{
 				"Access-Control-Allow-Origin":      "https://api.example.com",
-				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE",
+				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE, OPTIONS",
 				"Access-Control-Allow-Credentials": "true",
 			},
 		},
@@ -92,7 +91,7 @@ func TestCORS(t *testing.T) {
 			expectedStatus:    http.StatusOK,
 			expectedHeaders: map[string]string{
 				"Access-Control-Allow-Origin":      "https://v1.api.example.com",
-				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE",
+				"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE, OPTIONS",
 				"Access-Control-Allow-Credentials": "true",
 			},
 		},
@@ -296,6 +295,65 @@ func TestCORS(t *testing.T) {
 			for key, expectedValue := range tt.expectedHeaders {
 				assert.Equal(t, expectedValue, w.Header().Get(key), "Header %s mismatch", key)
 			}
+		})
+	}
+}
+
+func TestIsMethodAllowed(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		allowedMethods string
+		expected       bool
+	}{
+		{
+			name:           "GET is allowed",
+			method:         "GET",
+			allowedMethods: "GET, POST, PUT, DELETE",
+			expected:       true,
+		},
+		{
+			name:           "POST is allowed",
+			method:         "POST",
+			allowedMethods: "GET, POST, PUT, DELETE",
+			expected:       true,
+		},
+		{
+			name:           "PATCH is not allowed",
+			method:         "PATCH",
+			allowedMethods: "GET, POST, PUT, DELETE",
+			expected:       false,
+		},
+		{
+			name:           "case insensitive",
+			method:         "get",
+			allowedMethods: "GET, POST, PUT, DELETE",
+			expected:       true,
+		},
+		{
+			name:           "methods with spaces",
+			method:         "PUT",
+			allowedMethods: "GET, POST, PUT, DELETE",
+			expected:       true,
+		},
+		{
+			name:           "empty allowed methods",
+			method:         "GET",
+			allowedMethods: "",
+			expected:       false,
+		},
+		{
+			name:           "single allowed method",
+			method:         "GET",
+			allowedMethods: "GET",
+			expected:       true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := middlewares.IsMethodAllowed(tt.method, tt.allowedMethods)
+			assert.Equal(t, tt.expected, result)
 		})
 	}
 }

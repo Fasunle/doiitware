@@ -40,6 +40,11 @@ func CORS(allowedOriginsStr string, methods string, headers *string, exposeHeade
 		*headers = "Origin, Content-Type, Accept, Authorization, X-Request-ID"
 	}
 
+	// Ensure OPTIONS is included in the allowed methods for preflight requests
+	if !strings.Contains(methods, "OPTIONS") {
+		methods += ", OPTIONS"
+	}
+
 	return func(c *gin.Context) {
 		reqOrigin := c.Request.Header.Get("Origin")
 
