@@ -30,4 +30,8 @@ const (
 	JwtAudience      = "doiit-users"
 	JwtExpiry        = 24 * time.Hour
 	JwtRefreshExpiry = 7 * 24 * time.Hour
+
+	// Device Context Keys
+	DeviceContextKey   = "device_info"
+	DeviceIDContextKey = "device_id"
 )
