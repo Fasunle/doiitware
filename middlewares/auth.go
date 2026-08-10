@@ -11,11 +11,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret []byte
+
 
 // AuthMiddleware validates Bearer tokens, loads the authenticated user into Gin context,
 // and aborts the request with a structured 401 response when validation fails.
-func AuthMiddleware(source string, public []string) gin.HandlerFunc {
+func AuthMiddleware(source string, public []string, secret string) gin.HandlerFunc {
+	jwtSecret := []byte(secret)
 	return func(c *gin.Context) {
 
 		if source == "" {
